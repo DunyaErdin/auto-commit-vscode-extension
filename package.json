@@ -1,0 +1,157 @@
+{
+  "name": "autocommit",
+  "displayName": "AutoCommit",
+  "description": "AI-aware Git assistant • Robot code safe guard • Team workflow stabilizer. Smart auto-commit with safe/auto/manual modes, branch awareness, and conventional commits.",
+  "publisher": "IkDnyaErdin",
+  "author": {
+    "name": "Işık Dünya Erdin",
+    "email": "isikdunya5@gmail.com"
+  },
+  "license": "MIT",
+  "icon": "media/logo.png", 
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DunyaErdin/auto-commit-vscode-extension"
+  },
+  "bugs": {
+    "url": "https://github.com/DunyaErdin/auto-commit-vscode-extension/issues"
+  },
+  "homepage": "https://github.com/DunyaErdin/auto-commit-vscode-extension#readme",
+  "version": "1.0.0",
+  "engines": { "vscode": "^1.109.0" },
+  "categories": ["Other", "SCM"],
+  "keywords": ["git", "auto-commit", "conventional-commits", "robot", "workflow"],
+  "activationEvents": [
+    "onStartupFinished",
+    "onCommand:auto-commit-vscode-extension.toggle",
+    "onCommand:auto-commit-vscode-extension.commitNow",
+    "onCommand:auto-commit-vscode-extension.pushNow"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      { "command": "auto-commit-vscode-extension.toggle", "title": "Toggle AutoCommit" },
+      { "command": "auto-commit-vscode-extension.commitNow", "title": "AutoCommit: Commit Now" },
+      { "command": "auto-commit-vscode-extension.pushNow", "title": "AutoCommit: Push Now" },
+      { "command": "auto-commit-vscode-extension.showMenu", "title": "AutoCommit: Show Menu" }
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "Auto Commit Settings",
+      "properties": {
+        "autoCommit.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable automatic commits"
+        },
+        "autoCommit.mode": {
+          "type": "string",
+          "enum": ["safe", "auto", "manual"],
+          "default": "safe",
+          "enumDescriptions": [
+            "Show preview before each commit (recommended)",
+            "Commit automatically after debounce",
+            "Only commit via 'Commit Now' command"
+          ],
+          "description": "Commit flow mode"
+        },
+        "autoCommit.debounceMs": {
+          "type": "number",
+          "default": 2000,
+          "minimum": 500,
+          "description": "Debounce delay in ms before triggering commit"
+        },
+        "autoCommit.intervalMs": {
+          "type": "number",
+          "default": 300000,
+          "minimum": 60000,
+          "description": "Interval mode: commit every N ms"
+        },
+        "autoCommit.pushAfterCommit": {
+          "type": "boolean",
+          "default": false,
+          "description": "Push to remote after each commit (auto mode)"
+        },
+        "autoCommit.minChanges": {
+          "type": "number",
+          "default": 0,
+          "minimum": 0,
+          "description": "Minimum file count to trigger commit (0 = any)"
+        },
+        "autoCommit.protectMainBranch": {
+          "type": "boolean",
+          "default": true,
+          "description": "Warn when committing to main/master in safe mode"
+        },
+        "autoCommit.logLevel": {
+          "type": "string",
+          "enum": ["debug", "info", "warn", "error"],
+          "default": "info",
+          "description": "Log level for Output channel"
+        },
+        "autoCommit.gitCommandTimeoutMs": {
+          "type": "number",
+          "default": 30000,
+          "minimum": 5000,
+          "description": "Timeout for Git commands in ms"
+        },
+        "autoCommit.debounceSaveSpam": {
+          "type": "boolean",
+          "default": true,
+          "description": "Detect and skip save spam"
+        },
+        "autoCommit.rapidEditThresholdMs": {
+          "type": "number",
+          "default": 500,
+          "minimum": 100,
+          "description": "Rapid edit detection window in ms"
+        },
+        "autoCommit.skipSingleLineChange": {
+          "type": "boolean",
+          "default": false,
+          "description": "Skip commit when only 1 file with minimal changes"
+        }
+      }
+    }
+  },
+  
+  "scripts": {
+    "vscode:prepublish": "yarn run package",
+    "compile": "yarn run check-types && yarn run lint && node esbuild.js",
+    "build": "yarn run package",
+    "watch": "npm-run-all -p watch:*",
+    "watch:esbuild": "node esbuild.js --watch",
+    "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
+    "package": "yarn run check-types && yarn run lint && node esbuild.js --production",
+    "compile-tests": "tsc -p . --outDir out",
+    "watch-tests": "tsc -p . -w --outDir out",
+    "pretest": "yarn run compile-tests && yarn run compile && yarn run lint",
+    "check-types": "tsc --noEmit",
+    "lint": "eslint src",
+    "test": "vscode-test",
+    "test:unit": "jest",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "src/**/*.ts": ["eslint --fix", "prettier --write"]
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "22.x",
+    "@types/vscode": "^1.109.0",
+    "@vscode/test-cli": "^0.0.12",
+    "@vscode/test-electron": "^2.5.2",
+    "esbuild": "^0.27.2",
+    "eslint": "^9.39.2",
+    "jest": "^29.7.0",
+    "npm-run-all": "^4.1.5",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.4.3",
+    "prettier": "^3.4.2",
+    "ts-jest": "^29.2.5",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.54.0"
+  },
+  "dependencies": {}
+}
